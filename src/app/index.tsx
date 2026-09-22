@@ -1,4 +1,5 @@
 import { Image } from "expo-image";
+import { router } from "expo-router";
 import { Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -29,8 +30,12 @@ export default function WelcomeScreen() {
         </View>
 
         <View className="mt-10 gap-4">
-          {/* Nút Sign Up */}
-          <Button label="Sign Up" variant="primary" />
+          {/* Nút Sign Up — chuyển sang màn hình đăng ký */}
+          <Button
+            label="Sign Up"
+            variant="primary"
+            onPress={() => router.push("/sign-up")}
+          />
 
           {/* Nút Login */}
           <Button label="Login" variant="secondary" />
