@@ -3,10 +3,22 @@ import { router } from "expo-router";
 import { Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import { apiFetch } from "@/api/client";
 import onboardingIllustration from "@/assets/images/onboarding/Variant=Gain_total_control_of_your_money.svg";
 import { Button } from "@/components/ui/Button";
 
 export default function WelcomeScreen() {
+  // Nút Login: tạm thời gọi thử API backend để kiểm tra kết nối.
+  // Khi bấm sẽ gọi GET /api/hello và in kết quả (hoặc lỗi) ra console.
+  const handleLogin = async () => {
+    try {
+      const data = await apiFetch<{ message: string }>("/api/hello");
+      console.log("Gọi API thành công:", data.message);
+    } catch (error) {
+      console.log("Gọi API thất bại:", error);
+    }
+  };
+
   return (
     <SafeAreaView className="flex-1 bg-background">
       <View className="flex-1 px-5 pb-8">
@@ -37,12 +49,8 @@ export default function WelcomeScreen() {
             onPress={() => router.push("/sign-up")}
           />
 
-          {/* Nút Login — chuyển sang màn hình đăng nhập */}
-          <Button
-            label="Login"
-            variant="secondary"
-            onPress={() => router.push("/login")}
-          />
+          {/* Nút Login — tạm thời gọi thử API backend (chưa mở màn hình đăng nhập) */}
+          <Button label="Login" variant="secondary" onPress={handleLogin} />
         </View>
       </View>
     </SafeAreaView>
