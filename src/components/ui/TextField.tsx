@@ -5,7 +5,7 @@ import { Pressable, TextInput, View, type TextInputProps } from "react-native";
 import { colors } from "@/constants/colors";
 
 /**
- * Ô nhập liệu dùng chung cho các form (Sign Up, Login...).
+ * Ô nhập liệu (Text Input Field) dùng chung cho các form (Sign Up, Login...).
  *
  * Giao diện theo thiết kế: cao 56px, bo góc 16px, viền `surface.muted`,
  * placeholder màu `text.secondary`.
@@ -13,7 +13,10 @@ import { colors } from "@/constants/colors";
  * Khi truyền `secureTextEntry`, ô nhập sẽ tự hiện nút con mắt để bật/tắt
  * việc hiển thị nội dung (dùng cho ô mật khẩu).
  */
-export function Input({ secureTextEntry = false, ...props }: TextInputProps) {
+export function TextField({
+  secureTextEntry = false,
+  ...props
+}: TextInputProps) {
   // Trạng thái ẩn/hiện nội dung, chỉ có ý nghĩa khi là ô mật khẩu
   const [isHidden, setIsHidden] = useState(secureTextEntry);
 

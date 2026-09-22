@@ -37,8 +37,12 @@ export default function WelcomeScreen() {
             onPress={() => router.push("/sign-up")}
           />
 
-          {/* Nút Login */}
-          <Button label="Login" variant="secondary" />
+          {/* Nút Login — chuyển sang màn hình đăng nhập */}
+          <Button
+            label="Login"
+            variant="secondary"
+            onPress={() => router.push("/login")}
+          />
         </View>
       </View>
     </SafeAreaView>

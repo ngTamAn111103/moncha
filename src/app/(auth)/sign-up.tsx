@@ -7,7 +7,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import googleIcon from "@/assets/images/onboarding/flat-color-icons_google.svg";
 import { Button } from "@/components/ui/Button";
-import { Input } from "@/components/ui/Input";
+import { TextField } from "@/components/ui/TextField";
 import { colors } from "@/constants/colors";
 
 export default function SignUpScreen() {
@@ -41,17 +41,17 @@ export default function SignUpScreen() {
         {/* Các ô nhập liệu Name / Email / Password */}
         <View className="mt-14 gap-6">
           {/* Ô nhập Name */}
-          <Input placeholder="Name" autoCapitalize="words" />
+          <TextField placeholder="Name" autoCapitalize="words" />
 
           {/* Ô nhập Email */}
-          <Input
+          <TextField
             placeholder="Email"
             keyboardType="email-address"
             autoCapitalize="none"
           />
 
           {/* Ô nhập Password (kèm nút hiện/ẩn mật khẩu) */}
-          <Input placeholder="Password" secureTextEntry />
+          <TextField placeholder="Password" secureTextEntry />
         </View>
 
         {/* Đồng ý với điều khoản */}
@@ -124,10 +124,7 @@ export default function SignUpScreen() {
         {/* Đã có tài khoản? Chuyển sang Login */}
         <Text className="mt-5 text-center text-base font-medium text-text-secondary">
           Already have an account?{" "}
-          <Text
-            className="text-primary"
-            onPress={() => console.log("Chuyển sang màn hình Login")}
-          >
+          <Text className="text-primary" onPress={() => router.push("/login")}>
             Login
           </Text>
         </Text>
