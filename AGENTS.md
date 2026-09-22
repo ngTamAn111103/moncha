@@ -1,9 +1,10 @@
-Đây là ứng dụng di động Expo/React Native. Luôn ưu tiên các mẫu thiết kế mobile-first, hiệu năng và khả năng tương thích đa nền tảng.
+Đây là ứng dụng di động Expo/React Native (dự án **Moncha** — ứng dụng quản lý chi tiêu). Luôn ưu tiên các mẫu thiết kế mobile-first, hiệu năng và khả năng tương thích đa nền tảng.
 
 ## Ngôn ngữ làm việc
 
 - **Luôn luôn hỏi đáp bằng tiếng Việt.** Mọi trao đổi, giải thích, mô tả thay đổi và câu trả lời đều phải dùng tiếng Việt.
 - **Ghi chú/giải thích code bằng tiếng Việt.** Mọi comment, ghi chú trong mã nguồn, thông báo log và tài liệu đều viết bằng tiếng Việt.
+- **Luôn có chú thích cho từng phân đoạn element khi xây dựng giao diện.** Mỗi khu vực UI (top nav, ô nhập liệu, nút, checkbox, dòng chữ có link...) phải có comment tiếng Việt mô tả ngắn gọn ngay phía trên. Xem mẫu tại `src/app/index.tsx` và `src/app/(auth)/sign-up.tsx`.
 
 ## Expo đã thay đổi — không tin tưởng dữ liệu huấn luyện
 
@@ -21,46 +22,90 @@ Expo phát hành các breaking change mỗi bản SDK. Các API bạn từng nh�
 - **NativeWind v4** (Tailwind CSS cho React Native) — dùng prop `className` trên component.
 - **TypeScript** với chế độ `strict`.
 - **React Compiler** và **Typed Routes** đang bật trong `app.json` (`experiments`).
+- **expo-image** để hiển thị ảnh, bao gồm cả SVG.
+- **@expo/vector-icons** cho icon (Ionicons, AntDesign...).
 - Quản lý gói bằng **npm** (có `package-lock.json`), không dùng bun.
+
+## Cấu trúc thư mục
+
+```
+src/
+├── app/                  # Route của Expo Router — mỗi file là một màn hình
+│   ├── _layout.tsx       # Layout gốc: Stack + headerShown: false, import global.css
+│   ├── index.tsx         # Màn hình Welcome (route "/")
+│   └── (auth)/           # Nhóm route xác thực (không tạo segment trên URL)
+│       ├── login.tsx     # Màn hình Login (route "/login")
+│       └── sign-up.tsx   # Màn hình Sign Up (route "/sign-up")
+├── components/
+│   └── ui/               # Component UI tái sử dụng (Button, TextField...)
+├── constants/
+│   └── colors.ts         # Bảng màu cho code không dùng className
+└── types/
+    └── assets.d.ts       # Khai báo type cho import ảnh *.svg
+```
+
+- Giữ code không phải route (components, hooks, utils) bên ngoài `src/app/`.
+- Nhóm route bằng thư mục có ngoặc đơn, ví dụ `(auth)`: vẫn giữ URL phẳng (`/login`, `/sign-up`) nhưng gom các màn hình cùng nhóm lại.
 
 ## Lệnh
 
-Dùng `bunx` thay cho `npx` nếu dự án dùng bun (có `bun.lock`). Dự án này dùng npm nên dùng `npx`.
+Dự án dùng npm. Dùng `npx` cho các lệnh CLI.
 
 ```bash
 npx expo install <package>  # LUÔN dùng thay cho npm/yarn/pnpm/bun add — tự chọn phiên bản tương thích SDK
-npx expo start              # khởi động dev server
-npx expo lint               # lint
-npx tsc --noEmit            # kiểm tra kiểu (typecheck)
+npx expo start              # khởi động dev server (npm run start)
+npm run android             # mở trên Android
+npm run ios                 # mở trên iOS
+npm run web                 # mở trên web
+npm run lint                # lint (expo lint)
+npm run typecheck           # kiểm tra kiểu (tsc --noEmit)
+npm run format              # định dạng code (prettier --write .)
 npx expo-doctor             # chẩn đoán lỗi phụ thuộc và cấu hình
 npx expo install --fix      # sửa các phiên bản gói không tương thích
 ```
 
-Chạy lint và typecheck trước khi tuyên bố hoàn thành bất kỳ tác vụ nào.
+Chạy `npm run lint` và `npm run typecheck` trước khi tuyên bố hoàn thành bất kỳ tác vụ nào.
 
 ## Điều hướng & Routing
 
-- Dùng **Expo Router** cho mọi điều hướng. Các route nằm trong `src/app/` — mỗi file ở đó là một màn hình, các file `_layout.tsx` định nghĩa navigator. Giữ code không phải route (components, hooks, utils) bên ngoài `src/app/`.
+- Dùng **Expo Router** cho mọi điều hướng. Các route nằm trong `src/app/` — mỗi file ở đó là một màn hình, các file `_layout.tsx` định nghĩa navigator.
 - Import `Link`, `router` và `useLocalSearchParams` từ `expo-router`.
+- Điều hướng bằng `router.push("/duong-dan")`, `router.back()`. Vì **Typed Routes** đang bật, route phải tồn tại thì `router.push` mới qua typecheck.
 - Alias đường dẫn: `@/*` trỏ tới `./src/*`, `@/assets/*` trỏ tới `./assets/*`.
 - Tài liệu: https://docs.expo.dev/router/introduction.md
 
-## NativeWind
+## NativeWind & token màu
 
 - `className` được bật nhờ `nativewind/babel` trong `babel.config.js` và `withNativeWind` trong `metro.config.js`.
 - Style toàn cục khai báo tại `global.css`, được import trong `src/app/_layout.tsx`.
 - Cấu hình Tailwind ở `tailwind.config.js`; nhớ thêm đường dẫn file chứa class NativeWind vào `content`.
-- Khi thêm component/dependency, ưu tiên module Expo chính thức trước thư viện bên thứ ba.
 - **Không được code cứng giá trị màu/px tùy ý** (ví dụ `leading-[18px]`, `text-[#212325]`). Phải tra cứu `tailwind.config.js` và `src/constants/colors.ts` trước khi dùng, rồi chọn token có sẵn như `leading-4` thay cho `leading-[18px]`, `text-black` thay cho `text-[#212325]`. Nếu không có token chính xác thì dùng token gần đúng nhất.
+- Hai nguồn màu (`tailwind.config.js` và `src/constants/colors.ts`) chứa cùng bộ màu thương hiệu và **đồng bộ thủ công** — khi đổi màu phải cập nhật cả hai.
+- `src/constants/colors.ts` dùng cho code không phải `className`: `react-native-svg`, chart, navigation theme, `placeholderTextColor`, prop `color` của icon...
+
+## Quy ước xây dựng giao diện
+
+- **Chú thích tiếng Việt cho từng phân đoạn element.** Ví dụ: `{/* Top nav: nút quay lại + tiêu đề */}`, `{/* Ô nhập Email */}`, `{/* Nút Sign Up */}`.
+- **Tái sử dụng component UI** trong `src/components/ui/` thay vì viết lại. Hiện có:
+  - `Button` — nút bấm, hỗ trợ biến thể `primary` / `secondary` (qua prop `variant`), prop `label`, `onPress`.
+  - `TextField` — ô nhập liệu (cao 56px, bo 16px); khi truyền `secureTextEntry` sẽ tự hiện nút con mắt bật/tắt mật khẩu. Dùng chung cho cả Sign Up và Login.
+- Dùng `expo-image` (`<Image />`) để hiển thị ảnh, kể cả SVG. Ví dụ import SVG:
+  `import googleIcon from "@/assets/images/onboarding/flat-color-icons_google.svg";`
+  rồi `source={googleIcon}`. Type `*.svg` đã khai báo ở `src/types/assets.d.ts`.
+- Với kích thước ảnh, bọc trong `<View className="h-8 w-8">` rồi đặt `style={{ width: "100%", height: "100%" }}` cho `Image` để vẫn dùng token thay vì px cứng.
+- Bao ngoài màn hình bằng `SafeAreaView` từ `react-native-safe-area-context` (NativeWind đã có sẵn interop `className`); dùng `ScrollView` + `keyboardShouldPersistTaps="handled"` cho form để tránh bàn phím che.
+- **Font:** hiện dùng font hệ thống. Thiết kế gốc dùng Inter nhưng dự án chưa cài đặt; nếu cần đúng thiết kế phải thêm `expo-font` + file font.
+- Văn bản có link bên trong dùng `Text` lồng nhau với `onPress` và màu `text-primary`.
 
 ## Build với EAS
 
-Dùng EAS để build, ký và submit ứng dụng trên cloud (`eas build`, `eas submit`) và phát hành bản cập nhật OTA (`eas update`) — không cần Xcode hay Android Studio cục bộ. Chạy EAS CLI bằng `bunx eas-cli <command>` trong dự án Bun, hoặc `npx eas-cli@latest <command>` cho trường hợp còn lại; thay thế cho lệnh `eas` trần trong các ví dụ tài liệu.
+Dùng EAS để build, ký và submit ứng dụng trên cloud (`eas build`, `eas submit`) và phát hành bản cập nhật OTA (`eas update`) — không cần Xcode hay Android Studio cục bộ. Chạy EAS CLI bằng `npx eas-cli@latest <command>` (dự án dùng npm) thay cho lệnh `eas` trần trong các ví dụ tài liệu.
 Tài liệu: https://docs.expo.dev/eas/index.md
 
 ## Quy tắc
 
 - Nếu thư mục `ios/` và `android/` không tồn tại, chúng sẽ được sinh ra tự động (Continuous Native Generation). Không bao giờ tạo hay sửa chúng bằng tay — cấu hình hành vi native trong `app.json` và các config plugin.
 - Expo Go chỉ chứa các native module đi kèm sẵn. Sau khi thêm thư viện có code native, ứng dụng cần development build: `npx expo run:ios|android` chạy cục bộ, hoặc `eas build --profile development`.
+  - Lưu ý: `@expo/ui` và `expo-glass-effect` đã cài nhưng chưa dùng; đây là native module nên chỉ chạy trong development build, không chạy trên Expo Go.
 - Ưu tiên các module Expo được khuyến nghị thay vì thư viện bên thứ ba, và kiểm tra các skill sẵn có trước khi thêm phụ thuộc. Tài liệu: https://docs.expo.dev/versions/latest/index.md
 - Không commit thay đổi trừ khi được yêu cầu rõ ràng.
