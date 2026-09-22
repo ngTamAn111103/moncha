@@ -51,6 +51,7 @@ Chạy lint và typecheck trước khi tuyên bố hoàn thành bất kỳ tác 
 - Style toàn cục khai báo tại `global.css`, được import trong `src/app/_layout.tsx`.
 - Cấu hình Tailwind ở `tailwind.config.js`; nhớ thêm đường dẫn file chứa class NativeWind vào `content`.
 - Khi thêm component/dependency, ưu tiên module Expo chính thức trước thư viện bên thứ ba.
+- **Không được code cứng giá trị màu/px tùy ý** (ví dụ `leading-[18px]`, `text-[#212325]`). Phải tra cứu `tailwind.config.js` và `src/constants/colors.ts` trước khi dùng, rồi chọn token có sẵn như `leading-4` thay cho `leading-[18px]`, `text-black` thay cho `text-[#212325]`. Nếu không có token chính xác thì dùng token gần đúng nhất.
 
 ## Build với EAS
 
