@@ -25,6 +25,7 @@ Expo phát hành các breaking change mỗi bản SDK. Các API bạn từng nh�
 - **expo-image** để hiển thị ảnh, bao gồm cả SVG.
 - **@expo/vector-icons** cho icon (Ionicons, AntDesign...).
 - Quản lý gói bằng **npm** (có `package-lock.json`), không dùng bun.
+- **Backend:** FastAPI + Python 3.11 (môi trường ảo `uv`), dự kiến dùng SQLite. Nằm trong thư mục `backend/` cùng repo.
 
 ## Cấu trúc thư mục
 
@@ -36,12 +37,26 @@ src/
 │   └── (auth)/           # Nhóm route xác thực (không tạo segment trên URL)
 │       ├── login.tsx     # Màn hình Login (route "/login")
 │       └── sign-up.tsx   # Màn hình Sign Up (route "/sign-up")
+├── api/                  # Tầng gọi API backend
+│   └── client.ts         # apiFetch + ApiError; API_BASE_URL trỏ tới backend
 ├── components/
 │   └── ui/               # Component UI tái sử dụng (Button, TextField...)
 ├── constants/
 │   └── colors.ts         # Bảng màu cho code không dùng className
 └── types/
     └── assets.d.ts       # Khai báo type cho import ảnh *.svg
+```
+
+Backend nằm trong thư mục `backend/` ở gốc repo:
+
+```
+backend/
+├── .venv/              # Môi trường ảo Python (đã bỏ qua trong .gitignore, không commit)
+├── .gitignore          # Bỏ qua .venv/, __pycache__/, .env, *.db
+├── main.py             # Khởi tạo FastAPI + các endpoint
+├── requirements.txt    # Danh sách thư viện Python
+├── README.md           # Hướng dẫn cài đặt/chạy + mô tả trạng thái backend
+└── ...
 ```
 
 - Giữ code không phải route (components, hooks, utils) bên ngoài `src/app/`.
@@ -65,6 +80,39 @@ npx expo install --fix      # sửa các phiên bản gói không tương thích
 ```
 
 Chạy `npm run lint` và `npm run typecheck` trước khi tuyên bố hoàn thành bất kỳ tác vụ nào.
+
+## Backend (FastAPI)
+
+Backend nằm trong `backend/`, dùng **Python 3.11** và môi trường ảo **`uv`**. Hiện là bản khung tối giản để Front End gọi thử — **chưa có database và chưa có xác thực**.
+
+**Cài đặt từ đầu** (khi clone dự án về):
+
+```bash
+cd backend
+uv venv --python 3.11 .venv                   # tạo môi trường ảo
+uv pip install -r requirements.txt            # cài thư viện vào .venv
+```
+
+**Chạy dev server:**
+
+```bash
+cd backend
+.venv/bin/uvicorn main:app --reload --port 8000
+# Swagger UI: http://127.0.0.1:8000/docs
+```
+
+**Endpoint hiện có:**
+
+- `GET /api/health` → `{"status": "ok"}`
+- `GET /api/hello` → `{"message": "..."}`
+
+**Quy tắc backend:**
+
+- **Không cài thư viện Python lên môi trường thật** — mọi thứ phải nằm trong `backend/.venv`. Hỏi trước khi cài bất cứ gì ngoài môi trường ảo.
+- Mọi thư viện mới phải thêm vào `backend/requirements.txt`.
+- CORS hiện mở cho `http://localhost:8081` và `http://127.0.0.1:8081` (Expo dev).
+- **iOS Simulator** gọi backend qua `http://127.0.0.1:8000`. **Thiết bị thật / Android emulator** phải chạy server với `--host 0.0.0.0` và dùng IP LAN (ví dụ `http://192.168.1.10:8000`).
+- `AGENTS.md` (file này) và `backend/README.md` phải được cập nhật khi backend thay đổi.
 
 ## Điều hướng & Routing
 
