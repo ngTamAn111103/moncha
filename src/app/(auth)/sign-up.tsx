@@ -121,10 +121,13 @@ export default function SignUpScreen() {
           </Text>
         </Pressable>
 
-        {/* Đã có tài khoản? Chuyển sang Login */}
+        {/* Đã có tài khoản? Chuyển sang Login (replace để không tích luỹ history) */}
         <Text className="mt-5 text-center text-base font-medium text-text-secondary">
           Already have an account?{" "}
-          <Text className="text-primary" onPress={() => router.push("/login")}>
+          <Text
+            className="text-primary"
+            onPress={() => router.replace("/login")}
+          >
             Login
           </Text>
         </Text>

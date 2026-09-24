@@ -1,3 +1,5 @@
+const { colors } = require("./src/constants/colors");
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   // NOTE: Update this to include the paths to all files that contain Nativewind classes.
@@ -5,56 +7,58 @@ module.exports = {
   presets: [require("nativewind/preset")],
   theme: {
     extend: {
+      // Token className được suy ra từ nguồn duy nhất `src/constants/colors.js`.
+      // (Tailwind cần cấu trúc lồng nhau, nên chỉ ánh xạ tên — không chứa mã màu.)
       colors: {
         // Brand
         primary: {
-          DEFAULT: "#7F3DFF",
-          background: "#EEE5FF",
+          DEFAULT: colors.primary,
+          background: colors.primaryBackground,
         },
 
         // Semantic
         income: {
-          DEFAULT: "#00A86B",
-          background: "#CFFAEA",
+          DEFAULT: colors.income,
+          background: colors.incomeBackground,
         },
         expense: {
-          DEFAULT: "#FD3C4A",
-          background: "#FDD5D7",
+          DEFAULT: colors.expense,
+          background: colors.expenseBackground,
         },
         transfer: {
-          DEFAULT: "#0077FF",
-          background: "#BDDCFF",
+          DEFAULT: colors.transfer,
+          background: colors.transferBackground,
         },
         warning: {
-          DEFAULT: "#FCAC12",
-          background: "#FCEED4",
+          DEFAULT: colors.warning,
+          background: colors.warningBackground,
         },
 
         // Background
         background: {
-          DEFAULT: "#FFFFFF",
-          secondary: "#FCFCFC",
+          DEFAULT: colors.background,
+          secondary: colors.backgroundSecondary,
         },
         surface: {
-          DEFAULT: "#FFFFFF",
-          muted: "#F1F1FA",
+          DEFAULT: colors.surface,
+          muted: colors.surfaceMuted,
         },
 
         // Text
         text: {
-          primary: "#292B2D",
-          secondary: "#91919F",
-          inverse: "#FFFFFF",
+          primary: colors.textPrimary,
+          secondary: colors.textSecondary,
+          inverse: colors.textInverse,
         },
 
         // Border
-        border: "#E3E5E5",
+        border: colors.border,
 
         // Base
-        black: "#0D0E0F",
-        white: "#FFFFFF",
+        black: colors.black,
+        white: colors.white,
       },
     },
   },
   plugins: [],
-}
+};

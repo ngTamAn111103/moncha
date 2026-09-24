@@ -40,7 +40,7 @@ src/
 ├── components/
 │   └── ui/               # Component UI tái sử dụng (Button, TextField...)
 ├── constants/
-│   └── colors.ts         # Bảng màu cho code không dùng className
+│   └── colors.js         # Nguồn duy nhất cho design token màu
 └── types/
     └── assets.d.ts       # Khai báo type cho import ảnh *.svg
 ```
@@ -72,6 +72,7 @@ Chạy `npm run lint` và `npm run typecheck` trước khi tuyên bố hoàn th�
 - Dùng **Expo Router** cho mọi điều hướng. Các route nằm trong `src/app/` — mỗi file ở đó là một màn hình, các file `_layout.tsx` định nghĩa navigator.
 - Import `Link`, `router` và `useLocalSearchParams` từ `expo-router`.
 - Điều hướng bằng `router.push("/duong-dan")`, `router.back()`. Vì **Typed Routes** đang bật, route phải tồn tại thì `router.push` mới qua typecheck.
+- Với các màn hình chuyển đổi qua lại trong cùng một nhóm (ví dụ Login ↔ Sign Up), dùng `router.replace` thay vì `router.push` để tránh tích luỹ history (stack ngày càng dài). Chỉ dùng `router.push` khi cần quay lại màn hình trước bằng nút back.
 - Alias đường dẫn: `@/*` trỏ tới `./src/*`, `@/assets/*` trỏ tới `./assets/*`.
 - Tài liệu: https://docs.expo.dev/router/introduction.md
 
@@ -80,9 +81,10 @@ Chạy `npm run lint` và `npm run typecheck` trước khi tuyên bố hoàn th�
 - `className` được bật nhờ `nativewind/babel` trong `babel.config.js` và `withNativeWind` trong `metro.config.js`.
 - Style toàn cục khai báo tại `global.css`, được import trong `src/app/_layout.tsx`.
 - Cấu hình Tailwind ở `tailwind.config.js`; nhớ thêm đường dẫn file chứa class NativeWind vào `content`.
-- **Không được code cứng giá trị màu/px tùy ý** (ví dụ `leading-[18px]`, `text-[#212325]`). Phải tra cứu `tailwind.config.js` và `src/constants/colors.ts` trước khi dùng, rồi chọn token có sẵn như `leading-4` thay cho `leading-[18px]`, `text-black` thay cho `text-[#212325]`. Nếu không có token chính xác thì dùng token gần đúng nhất.
-- Hai nguồn màu (`tailwind.config.js` và `src/constants/colors.ts`) chứa cùng bộ màu thương hiệu và **đồng bộ thủ công** — khi đổi màu phải cập nhật cả hai.
-- `src/constants/colors.ts` dùng cho code không phải `className`: `react-native-svg`, chart, navigation theme, `placeholderTextColor`, prop `color` của icon...
+- **Nguồn duy nhất cho design token màu là `src/constants/colors.js`.** Không khai báo mã màu ở bất kỳ file nào khác. `tailwind.config.js` chỉ `require` file này và ánh xạ sang cấu trúc lồng của Tailwind (không chứa mã màu).
+- **Không được code cứng giá trị màu/px tùy ý** (ví dụ `leading-[18px]`, `text-[#212325]`). Phải tra cứu token trong `src/constants/colors.js` trước khi dùng, rồi chọn token có sẵn như `leading-4` thay cho `leading-[18px]`, `text-black` thay cho `text-[#212325]`. Nếu không có token chính xác thì dùng token gần đúng nhất.
+- Cách dùng token: qua `className` (ví dụ `bg-primary`, `text-text-secondary`) khi có thể; với code không dùng được `className` (`react-native-svg`, chart, navigation theme, `placeholderTextColor`, prop `color` của icon...) thì import `import { colors } from "@/constants/colors"` rồi dùng `colors.primary`, `colors.textSecondary`...
+- Thêm/sửa màu chỉ cần sửa `src/constants/colors.js`; `tailwind.config.js` và code runtime tự lấy theo.
 
 ## Quy ước xây dựng giao diện
 

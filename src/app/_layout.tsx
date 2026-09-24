@@ -1,5 +1,5 @@
 import { Stack } from "expo-router";
-import "../../global.css"
+import "../../global.css";
 
 export default function RootLayout() {
   // Ẩn header mặc định của Stack trên mọi màn hình
