@@ -1,0 +1,28 @@
+# Môi trường ảo Python
+.venv/
+venv/
+
+# Bộ nhớ đệm và tệp đã biên dịch của Python
+__pycache__/
+*.py[cod]
+
+# Cơ sở dữ liệu cục bộ
+*.db
+*.sqlite
+*.sqlite3
+
+# Biến môi trường và thông tin bí mật
+.env
+.env.*
+!.env.example
+
+# Tệp sinh ra bởi công cụ kiểm thử và phân tích mã
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Gói build
+build/
+dist/
